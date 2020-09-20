@@ -4,10 +4,14 @@ import interfaces.IJogo;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Map;
 
 public class Server extends UnicastRemoteObject implements IJogo {
     private final int PORT = 52369;
-    public Server() throws RemoteException {}
+    private volatile Map<Integer, String> players;
+    private int maxPlayers;
+
+    public Server(int maxPlayers) throws RemoteException {}
 
     @Override
     public int registra() throws RemoteException {
