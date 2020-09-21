@@ -1,25 +1,25 @@
 package server;
 
-import client.Jogador;
-
+import utils.PlayersUtils;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PokerThread extends Thread {
-    private volatile ArrayList<Jogador> players;
+    private volatile HashMap<Integer, String> hosts;
 
-    public PokerThread(ArrayList<Jogador> players) {
+    public PokerThread(HashMap<Integer, String> hosts) {
         super();
-        this.players = players;
+        this.hosts = hosts;
     }
 
     @Override
     public void run() {
         while(true) {
-            synchronized (this.players) {
+            synchronized (this.hosts) {
                 try {
-                    for (Jogador player : this.players) {
-                        player.cutuca();
+                    for (Map.Entry<Integer, String> host : this.hosts.entrySet()) {
+                        PlayersUtils.getPlayer(host.getValue()).cutuca();
                     }
                     Thread.sleep(3000);
                 }
