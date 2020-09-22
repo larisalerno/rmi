@@ -63,6 +63,14 @@ public class Jogo extends UnicastRemoteObject implements IJogo {
                 this.start();
             }
 
+            /*
+            @TODO Códigio correto para quando tivermos todas as VMs funcionando
+            if (canStartMatch()) {
+                this.start();
+            }
+             */
+
+
             return playerId;
         } catch (ServerNotActiveException exception) {
             System.out.println("Server is not active. Error message: " + exception.getMessage());
