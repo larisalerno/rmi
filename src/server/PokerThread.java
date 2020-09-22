@@ -1,6 +1,6 @@
 package server;
 
-import utils.PlayersUtils;
+import utils.GameUtils;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +19,7 @@ public class PokerThread extends Thread {
             synchronized (this.hosts) {
                 try {
                     for (Map.Entry<Integer, String> host : this.hosts.entrySet()) {
-                        PlayersUtils.getPlayer(host.getValue()).cutuca();
+                        GameUtils.getPlayer(host.getValue()).cutuca();
                     }
                     Thread.sleep(3000);
                 }

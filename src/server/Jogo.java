@@ -1,8 +1,9 @@
 package server;
 
 import client.Jogador;
+import interfaces.IJogador;
 import interfaces.IJogo;
-import utils.PlayersUtils;
+import utils.GameUtils;
 import utils.RandomIDGenerator;
 
 import java.net.MalformedURLException;
@@ -17,7 +18,7 @@ import java.util.Stack;
 
 public class Jogo extends UnicastRemoteObject implements IJogo {
     private static final long serialVersionUID = Long.MAX_VALUE;
-    private final int PORT = 52369;
+    private final int PORT = 52370;
     private volatile HashMap<Integer, String> hosts;
     private Stack<Integer> possibleIdsCollection;
     private int maxPlayers;
@@ -33,7 +34,8 @@ public class Jogo extends UnicastRemoteObject implements IJogo {
     private void start() {
         for (Map.Entry<Integer, String> host : this.hosts.entrySet()) {
             try {
-                PlayersUtils.getPlayer(host.getValue()).inicia();
+                IJogador player = GameUtils.getPlayer(host.getValue());
+                player.inicia();
             } catch (RemoteException exception) {
                 exception.printStackTrace();
             }
@@ -50,12 +52,14 @@ public class Jogo extends UnicastRemoteObject implements IJogo {
             return -1;
         }
         try {
-            String hostName = String.format("rmi://%d:52369/Hello2", getClientHost());
+            String hostName = String.format("rmi://%s:%d/Hello2", getClientHost(), PORT);
             Integer playerId = this.possibleIdsCollection.pop();
             this.hosts.put(playerId, hostName);
+            IJogador player = GameUtils.getPlayer(hostName);
+            player.setId(playerId);
             System.out.println("Player " + hostName + " has been registered successfully.");
 
-            if (canStartMatch()) {
+            if (!canStartMatch()) {
                 this.start();
             }
 
@@ -81,11 +85,13 @@ public class Jogo extends UnicastRemoteObject implements IJogo {
     @Override
     public int encerra(int id) throws RemoteException {
         String playerHostName = this.hosts.get(id);
-        Jogador player = (Jogador) PlayersUtils.getPlayer(playerHostName);
+        IJogador player = GameUtils.getPlayer(playerHostName);
+
         player.finaliza();
         this.hosts.remove(id);
         try {
             Naming.unbind(playerHostName);
+            System.out.println("Player with id "+id+" has been terminated by the server.");
         } catch (NotBoundException e) {
             e.printStackTrace();
         } catch (MalformedURLException e) {

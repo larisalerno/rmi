@@ -18,7 +18,7 @@ public class AppServer {
         try {
             System.setProperty("java.rmi.server.hostname", serverAddress);
             LocateRegistry.createRegistry(PORT);
-            String server = String.format("rmi://%s:%d/remote_play", serverAddress, PORT);
+            String server = String.format("rmi://%s:%d/server", serverAddress, PORT);
             Naming.rebind(server, new Jogo(maxPlayers));
             System.out.println("Server "+server+" initiated.");
         }
