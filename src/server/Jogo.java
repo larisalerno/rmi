@@ -18,6 +18,8 @@ import java.util.Stack;
 
 public class Jogo extends UnicastRemoteObject implements IJogo {
     private static final long serialVersionUID = Long.MAX_VALUE;
+    private final int MIN_RANDOM = 0;
+    private final int MAX_RANDOM = 99;
     private final int PORT = 52370;
     private volatile HashMap<Integer, String> hosts;
     private Stack<Integer> possibleIdsCollection;
@@ -81,12 +83,11 @@ public class Jogo extends UnicastRemoteObject implements IJogo {
     @Override
     public int joga(int id) throws RemoteException {
         System.out.println("Player with id " + id + " has played.");
-
-        // Randomizer da morte
-        if (false) {
+        int randomNumber = MIN_RANDOM + (int) (Math.random() * (MAX_RANDOM - MIN_RANDOM + 1));
+        if (randomNumber == 21) {
+            System.out.println("Player with id "+id+" was randomly chosen and is now being terminated.");
             this.encerra(id);
         }
-
         return id;
     }
 
@@ -94,9 +95,9 @@ public class Jogo extends UnicastRemoteObject implements IJogo {
     public int encerra(int id) throws RemoteException {
         String playerHostName = this.hosts.get(id);
         IJogador player = GameUtils.getPlayer(playerHostName);
-
         player.finaliza();
         this.hosts.remove(id);
+
         try {
             Naming.unbind(playerHostName);
             System.out.println("Player with id "+id+" has been terminated by the server.");
