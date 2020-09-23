@@ -49,7 +49,6 @@ public class Client {
 
         // Recovering game server instance
         IJogo server = GameUtils.getServer(serverHostName);
-        IJogador player = GameUtils.getPlayer(clientHostName);
 
         // Registering player into the game
         try {

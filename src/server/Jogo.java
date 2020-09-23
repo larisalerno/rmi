@@ -61,17 +61,13 @@ public class Jogo extends UnicastRemoteObject implements IJogo {
             player.setId(playerId);
             System.out.println("Player " + hostName + " has been registered successfully.");
 
-            if (!canStartMatch()) {
-                this.start();
-            }
+//            if (!canStartMatch()) {
+//                this.start();
+//            }
 
-            /*
-            @TODO Códigio correto para quando tivermos todas as VMs funcionando
             if (canStartMatch()) {
                 this.start();
             }
-             */
-
 
             return playerId;
         } catch (ServerNotActiveException exception) {

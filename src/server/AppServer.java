@@ -38,5 +38,9 @@ public class AppServer {
             );
             System.exit(0);
         }
+        else if(Integer.parseInt(args[1]) == 0) {
+            System.out.println("Incorrect initialization. The maximum player capacity should be at least 1 or greater.");
+            System.exit(0);
+        }
     }
 }
