@@ -34,14 +34,12 @@ public class Jogo extends UnicastRemoteObject implements IJogo {
     }
 
     private void start() {
-        synchronized (this.hosts) {
-            for (Map.Entry<Integer, String> host : this.hosts.entrySet()) {
-                try {
-                    IJogador player = GameUtils.getPlayer(host.getValue());
-                    player.inicia();
-                } catch (RemoteException exception) {
-                    exception.printStackTrace();
-                }
+        for (Map.Entry<Integer, String> host : this.hosts.entrySet()) {
+            try {
+                IJogador player = GameUtils.getPlayer(host.getValue());
+                player.inicia();
+            } catch (RemoteException exception) {
+                exception.printStackTrace();
             }
         }
     }
