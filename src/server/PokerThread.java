@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PokerThread extends Thread {
-    private volatile HashMap<Integer, String> hosts;
+    private HashMap<Integer, String> hosts;
 
     public PokerThread(HashMap<Integer, String> hosts) {
         super();
