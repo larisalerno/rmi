@@ -91,13 +91,14 @@ public class Jogo extends UnicastRemoteObject implements IJogo {
     public int encerra(int id) throws RemoteException {
         String playerHostName = this.hosts.get(id);
         IJogador player = GameUtils.getPlayer(playerHostName);
-        player.finaliza();
+
         synchronized (this.hosts) {
             this.hosts.remove(id);
         }
 
         try {
             Naming.unbind(playerHostName);
+            player.finaliza();
             System.out.println("Player with id "+id+" has been terminated by the server.");
         } catch (NotBoundException e) {
             e.printStackTrace();
