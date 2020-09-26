@@ -22,12 +22,14 @@ public class Jogo extends UnicastRemoteObject implements IJogo {
     private final int MAX_RANDOM = 99;
     private final int PORT = 52370;
     private volatile HashMap<Integer, String> hosts;
+    private volatile Stack<IJogador> players;
     private Stack<Integer> possibleIdsCollection;
     private int maxPlayers;
 
     public Jogo(int maxPlayers) throws RemoteException {
         this.maxPlayers = maxPlayers;
         this.hosts = new HashMap<>();
+        this.players = new Stack<>();
         this.possibleIdsCollection = RandomIDGenerator.generateNumbers(this.maxPlayers);
 //        new PokerThread(this.hosts).start();
 
@@ -42,6 +44,19 @@ public class Jogo extends UnicastRemoteObject implements IJogo {
                 exception.printStackTrace();
             }
         }
+
+//        for (Map.Entry<Integer, String> host : this.hosts.entrySet()) {
+//            IJogador player = GameUtils.getPlayer(host.getValue());
+//            this.players.push(player);
+//        }
+//
+//        this.players.forEach(player ->{
+//            try {
+//                player.inicia();
+//            } catch (RemoteException exception) {
+//                exception.printStackTrace();
+//            }
+//        });
     }
 
     public boolean canStartMatch() {
@@ -60,10 +75,6 @@ public class Jogo extends UnicastRemoteObject implements IJogo {
             IJogador player = GameUtils.getPlayer(hostName);
             player.setId(playerId);
             System.out.println("Player " + hostName + " has been registered successfully.");
-
-//            if (!canStartMatch()) {
-//                this.start();
-//            }
 
             if (canStartMatch()) {
                 this.start();
