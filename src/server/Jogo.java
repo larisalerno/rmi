@@ -92,7 +92,9 @@ public class Jogo extends UnicastRemoteObject implements IJogo {
         String playerHostName = this.hosts.get(id);
         IJogador player = GameUtils.getPlayer(playerHostName);
         player.finaliza();
-        this.hosts.remove(id);
+        synchronized (this.hosts) {
+            this.hosts.remove(id);
+        }
 
 //        try {
 //            Naming.unbind(playerHostName);
