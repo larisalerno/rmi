@@ -34,12 +34,14 @@ public class Jogo extends UnicastRemoteObject implements IJogo {
     }
 
     private void start() {
-        for (Map.Entry<Integer, String> host : this.hosts.entrySet()) {
-            try {
-                IJogador player = GameUtils.getPlayer(host.getValue());
-                player.inicia();
-            } catch (RemoteException exception) {
-                exception.printStackTrace();
+        synchronized (this.hosts) {
+            for (Map.Entry<Integer, String> host : this.hosts.entrySet()) {
+                try {
+                    IJogador player = GameUtils.getPlayer(host.getValue());
+                    player.inicia();
+                } catch (RemoteException exception) {
+                    exception.printStackTrace();
+                }
             }
         }
     }
@@ -56,14 +58,12 @@ public class Jogo extends UnicastRemoteObject implements IJogo {
         try {
             String hostName = String.format("rmi://%s:%d/Hello2", getClientHost(), PORT);
             Integer playerId = this.possibleIdsCollection.pop();
-            this.hosts.put(playerId, hostName);
+            synchronized (this.hosts) {
+                this.hosts.put(playerId, hostName);
+            }
             IJogador player = GameUtils.getPlayer(hostName);
             player.setId(playerId);
             System.out.println("Player " + hostName + " has been registered successfully.");
-
-//            if (!canStartMatch()) {
-//                this.start();
-//            }
 
             if (canStartMatch()) {
                 this.start();
@@ -91,19 +91,19 @@ public class Jogo extends UnicastRemoteObject implements IJogo {
     public int encerra(int id) throws RemoteException {
         String playerHostName = this.hosts.get(id);
         IJogador player = GameUtils.getPlayer(playerHostName);
-        player.finaliza();
+
         synchronized (this.hosts) {
             this.hosts.remove(id);
         }
-
-//        try {
-//            Naming.unbind(playerHostName);
-//            System.out.println("Player with id "+id+" has been terminated by the server.");
-//        } catch (NotBoundException e) {
-//            e.printStackTrace();
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            Naming.unbind(playerHostName);
+            System.out.println("Player with id "+id+" has been terminated by the server.");
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        player.finaliza();
         return id;
     }
 }

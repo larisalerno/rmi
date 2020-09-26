@@ -54,6 +54,7 @@ public class Jogador extends UnicastRemoteObject implements IJogador {
     @Override
     public void finaliza() throws RemoteException {
         System.out.println("The player with id "+id+" has been terminated by the server");
+        System.exit(0);
     }
 
     @Override
