@@ -35,7 +35,7 @@ public class Jogo extends UnicastRemoteObject implements IJogo {
 
     }
 
-    private void start() {
+    private synchronized void start() {
         for (Map.Entry<Integer, String> host : this.hosts.entrySet()) {
             try {
                 IJogador player = GameUtils.getPlayer(host.getValue());

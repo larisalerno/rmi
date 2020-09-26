@@ -32,7 +32,7 @@ public class Jogador extends UnicastRemoteObject implements IJogador {
     }
 
     @Override
-    public void inicia() throws RemoteException {
+    public synchronized void inicia() throws RemoteException {
         System.out.println("The player with id "+id+" has been initiated by the server and is now playing");
 
         IJogo server = GameUtils.getServer(this.serverHostName);
