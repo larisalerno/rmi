@@ -29,7 +29,7 @@ public class Jogo extends UnicastRemoteObject implements IJogo {
         this.maxPlayers = maxPlayers;
         this.hosts = new HashMap<>();
         this.possibleIdsCollection = RandomIDGenerator.generateNumbers(this.maxPlayers);
-        new PokerThread(this.hosts).start();
+//        new PokerThread(this.hosts).start();
 
     }
 
