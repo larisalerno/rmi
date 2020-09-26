@@ -96,15 +96,17 @@ public class Jogo extends UnicastRemoteObject implements IJogo {
             this.hosts.remove(id);
         }
 
-        try {
-            Naming.unbind(playerHostName);
-            player.finaliza();
-            System.out.println("Player with id "+id+" has been terminated by the server.");
-        } catch (NotBoundException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        player.finaliza();
+//
+//        try {
+//            Naming.unbind(playerHostName);
+//
+//            System.out.println("Player with id "+id+" has been terminated by the server.");
+//        } catch (NotBoundException e) {
+//            e.printStackTrace();
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        }
         return id;
     }
 }
